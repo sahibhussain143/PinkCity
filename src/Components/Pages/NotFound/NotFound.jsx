@@ -38,7 +38,7 @@ const FloatingIsland = () => {
       {[...Array(5)].map((_, i) => (
         <mesh
           key={i}
-          ref={el => cloudRefs.current[i] = el}
+          ref={el => (cloudRefs.current[i] = el)}
           position={[Math.sin(i) * 3, 1, Math.cos(i) * 3]}
         >
           <sphereGeometry args={[0.3, 16, 16]} />
@@ -49,7 +49,6 @@ const FloatingIsland = () => {
   );
 };
 
-
 const NotFound = () => {
   const controls = useAnimation();
   const ref = useRef();
@@ -57,7 +56,7 @@ const NotFound = () => {
 
   useEffect(() => {
     if (isInView) {
-      controls.start("visible");
+      controls.start('visible');
     }
   }, [isInView, controls]);
 
@@ -67,9 +66,9 @@ const NotFound = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.3
-      }
-    }
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const itemVariants = {
@@ -78,20 +77,20 @@ const NotFound = () => {
       y: 0,
       opacity: 1,
       transition: {
-        type: "spring",
+        type: 'spring',
         stiffness: 100,
-        damping: 10
-      }
-    }
+        damping: 10,
+      },
+    },
   };
 
   const buttonVariants = {
     hover: {
       scale: 1.05,
-      boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.2)",
-      transition: { type: "spring", stiffness: 400, damping: 10 }
+      boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
+      transition: { type: 'spring', stiffness: 400, damping: 10 },
     },
-    tap: { scale: 0.95 }
+    tap: { scale: 0.95 },
   };
 
   return (
@@ -102,8 +101,21 @@ const NotFound = () => {
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} />
           <FloatingIsland />
-          <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
-          <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+          <Stars
+            radius={100}
+            depth={50}
+            count={5000}
+            factor={4}
+            saturation={0}
+            fade
+            speed={1}
+          />
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            autoRotate
+            autoRotateSpeed={0.5}
+          />
         </Canvas>
       </div>
 
@@ -122,33 +134,29 @@ const NotFound = () => {
             animate={{
               scale: [1, 1.05, 1],
               textShadow: [
-                "0 0 10px rgba(99, 102, 241, 0)",
-                "0 0 20px rgba(99, 102, 241, 0.5)",
-                "0 0 10px rgba(99, 102, 241, 0)"
-              ]
+                '0 0 10px rgba(99, 102, 241, 0)',
+                '0 0 20px rgba(99, 102, 241, 0.5)',
+                '0 0 10px rgba(99, 102, 241, 0)',
+              ],
             }}
             transition={{
               duration: 3,
-              ease: "easeInOut",
+              ease: 'easeInOut',
               repeat: Infinity,
-              repeatType: "reverse"
+              repeatType: 'reverse',
             }}
           >
             404
           </motion.h1>
-          <motion.h2
-            className="text-4xl font-semibold mb-2"
-            variants={itemVariants}
-          >
+          <motion.h2 className="text-4xl font-semibold mb-2" variants={itemVariants}>
             Lost in Space
           </motion.h2>
-          <motion.p
-            className="text-xl text-gray-300 max-w-lg"
-            variants={itemVariants}
-          >
+          <motion.p className="text-xl text-gray-300 max-w-lg" variants={itemVariants}>
             The page you're looking for has drifted into the cosmic void.
           </motion.p>
         </motion.div>
+
+        {/* Terminal-like Box */}
         <motion.div
           variants={itemVariants}
           className="bg-gray-800/80 backdrop-blur-md rounded-xl p-6 mb-12 w-full max-w-md border border-gray-700 shadow-xl"
@@ -173,74 +181,77 @@ const NotFound = () => {
         </motion.div>
 
         {/* Navigation Buttons */}
-        <motion.div
-          variants={containerVariants}
-          className="flex flex-wrap justify-center gap-4"
-        >
-          <motion.button
-            variants={itemVariants}
-            whileHover="hover"
-            whileTap="tap"
-            variants={buttonVariants}
-            className="flex items-center gap-2 px-6 py-3 bg-indigo-600 rounded-lg font-medium"
-          >
-            <FiArrowLeft />
-            <Link to="/">Go Back</Link>
-          </motion.button>
+        <motion.div variants={containerVariants} className="flex flex-wrap justify-center gap-4">
+          <motion.div variants={itemVariants}>
+            <motion.button
+              whileHover="hover"
+              whileTap="tap"
+              variants={buttonVariants}
+              className="flex items-center gap-2 px-6 py-3 bg-indigo-600 rounded-lg font-medium"
+            >
+              <FiArrowLeft />
+              <Link to="/">Go Back</Link>
+            </motion.button>
+          </motion.div>
 
-          <motion.button
-            variants={itemVariants}
-            whileHover="hover"
-            whileTap="tap"
-            variants={buttonVariants}
-            className="flex items-center gap-2 px-6 py-3 bg-gray-700 rounded-lg font-medium"
-          >
-            <FiHome />
-            <Link to="/">Home Page</Link>
-          </motion.button>
+          <motion.div variants={itemVariants}>
+            <motion.button
+              whileHover="hover"
+              whileTap="tap"
+              variants={buttonVariants}
+              className="flex items-center gap-2 px-6 py-3 bg-gray-700 rounded-lg font-medium"
+            >
+              <FiHome />
+              <Link to="/">Home Page</Link>
+            </motion.button>
+          </motion.div>
 
-          <motion.button
-            variants={itemVariants}
-            whileHover="hover"
-            whileTap="tap"
-            variants={buttonVariants}
-            className="flex items-center gap-2 px-6 py-3 bg-purple-600 rounded-lg font-medium"
-          >
-            <FiCompass />
-            <Link to="/explore">Explore</Link>
-          </motion.button>
+          <motion.div variants={itemVariants}>
+            <motion.button
+              whileHover="hover"
+              whileTap="tap"
+              variants={buttonVariants}
+              className="flex items-center gap-2 px-6 py-3 bg-purple-600 rounded-lg font-medium"
+            >
+              <FiCompass />
+              <Link to="/explore">Explore</Link>
+            </motion.button>
+          </motion.div>
 
-          <motion.button
-            variants={itemVariants}
-            whileHover="hover"
-            whileTap="tap"
-            variants={buttonVariants}
-            className="flex items-center gap-2 px-6 py-3 bg-gray-800 border border-gray-700 rounded-lg font-medium"
-          >
-            <FiGithub />
-            <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer">
-              Report Issue
-            </a>
-          </motion.button>
+          <motion.div variants={itemVariants}>
+            <motion.button
+              whileHover="hover"
+              whileTap="tap"
+              variants={buttonVariants}
+              className="flex items-center gap-2 px-6 py-3 bg-gray-800 border border-gray-700 rounded-lg font-medium"
+            >
+              <FiGithub />
+              <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer">
+                Report Issue
+              </a>
+            </motion.button>
+          </motion.div>
         </motion.div>
 
+        {/* Astronaut Animation */}
         <motion.div
           variants={itemVariants}
           className="absolute bottom-8 right-8 text-6xl"
           animate={{
             y: [0, -20, 0],
-            rotate: [0, 5, -5, 0]
+            rotate: [0, 5, -5, 0],
           }}
           transition={{
             duration: 6,
-            ease: "easeInOut",
-            repeat: Infinity
+            ease: 'easeInOut',
+            repeat: Infinity,
           }}
         >
           👨‍🚀
         </motion.div>
       </motion.div>
 
+      {/* Floating Particles */}
       {[...Array(30)].map((_, i) => (
         <motion.div
           key={i}
@@ -259,8 +270,8 @@ const NotFound = () => {
           transition={{
             duration: Math.random() * 15 + 10,
             repeat: Infinity,
-            repeatType: "reverse",
-            ease: "linear",
+            repeatType: 'reverse',
+            ease: 'linear',
           }}
         />
       ))}

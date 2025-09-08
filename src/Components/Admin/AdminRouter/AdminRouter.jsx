@@ -11,7 +11,7 @@ import AddBennar from '../AdminPages/Bennar/AddBennar';
 import BennarList from '../AdminPages/Bennar/BennarList';
 import { Settings } from 'lucide-react';
 import RegisteredCustomer from "../../Admin/AdminPages/Customers/RegisteredCustomer";
-import EnquiryList from '../AdminPages/Customers/EnquiryLIst';
+import EnquiryList from '../AdminPages/Customers/EnquiryList';
 import AddCustomer from '../AdminPages/Customers/AddCustomer';
 import ManageRecentlyAdded from '../AdminPages/Bennar/ManageRecentlyAdded';
 

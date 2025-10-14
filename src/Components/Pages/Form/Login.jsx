@@ -634,14 +634,13 @@
 
 
 
-
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
 
+  // Particles.js effect
   useEffect(() => {
     const scriptId = "particles-js-script";
     if (!document.getElementById(scriptId)) {
@@ -673,10 +672,7 @@ export default function Login() {
                 onhover: { enable: true, mode: "repulse" },
                 onclick: { enable: true, mode: "push" },
               },
-              modes: {
-                repulse: { distance: 200 },
-                push: { particles_nb: 4 },
-              },
+              modes: { repulse: { distance: 200 }, push: { particles_nb: 4 } },
             },
             retina_detect: true,
           });
@@ -688,67 +684,79 @@ export default function Login() {
 
   const [form, setForm] = useState("login");
   const [users, setUsers] = useState([]);
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [registerData, setRegisterData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const [registerData, setRegisterData] = useState({ name: "", email: "", password: "" });
   const [forgetEmail, setForgetEmail] = useState("");
 
-  const switchForm = (formName) => {
-    setMessage("");
-    setError("");
-    setForm(formName);
+  // Popup state
+  const [popup, setPopup] = useState({ show: false, title: "", message: "", type: "info" });
+
+  const switchForm = (formName) => setForm(formName);
+
+  // Function to show popup
+  const showPopup = (title, message, type = "info") => {
+    setPopup({ show: true, title, message, type });
   };
 
-  // ✅ Registration
+  // Close popup
+  const closePopup = () => setPopup({ ...popup, show: false });
+
+  // Registration
   const handleRegister = (e) => {
     e.preventDefault();
     const email = registerData.email.toLowerCase().trim();
     if (users.find((u) => u.email === email)) {
-      setError("Email already registered.");
+      showPopup("Error", "Email already registered", "error");
       return;
     }
     setUsers([...users, { ...registerData, email }]);
-    setMessage("Account created successfully! You can login now.");
+    showPopup("Success", "Account created successfully! You can login now", "success");
     setRegisterData({ name: "", email: "", password: "" });
+    setForm("login");
   };
 
-  // ✅ Login with Admin Redirect
+  // Login
   const handleLogin = (e) => {
     e.preventDefault();
     const email = loginData.email.toLowerCase().trim();
     const password = loginData.password.trim();
 
-    // 🔐 Admin check
-    if (email === "sahibhussain@gmail.com" && password === "123123") {
-      setMessage("Welcome Admin!");
-      navigate("/admin");
+    const adminEmail = "sahibhussain@gmail.com";
+    const adminPassword = "123123";
+
+    if (email === adminEmail) {
+      if (password === adminPassword) {
+        showPopup("Welcome Admin", "You are logged in as admin", "success");
+        setTimeout(() => navigate("/admin"), 1500);
+      } else {
+        showPopup("Error", "Incorrect password", "error");
+      }
       return;
     }
 
-    // Normal user check
-    const user = users.find((u) => u.email === email && u.password === password);
-    if (user) {
-      setMessage(`Welcome back, ${user.name}!`);
-      navigate("/");
+    const user = users.find((u) => u.email === email);
+    if (!user) {
+      showPopup("Error", "Email mismatch", "error");
+      return;
+    }
+
+    if (user.password === password) {
+      showPopup("Success", `Welcome back, ${user.name}!`, "success");
+      setTimeout(() => navigate("/"), 1500);
     } else {
-      setError("Invalid email or password.");
+      showPopup("Error", "Incorrect password", "error");
     }
   };
 
-  // ✅ Forgot Password (Simulation)
+  // Forgot password
   const handleForget = (e) => {
     e.preventDefault();
     const email = forgetEmail.toLowerCase().trim();
     const user = users.find((u) => u.email === email);
     if (user) {
-      setMessage(`Reset link sent to ${email} (simulated).`);
+      showPopup("Success", `Reset link sent to ${email} (simulated)`, "success");
     } else {
-      setError("Email not found.");
+      showPopup("Error", "Email not found", "error");
     }
   };
 
@@ -764,20 +772,10 @@ export default function Login() {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      {/* Background particles */}
-      <div
-        id="particles-js"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          zIndex: 10,
-        }}
-      />
+      {/* Particles background */}
+      <div id="particles-js" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10 }} />
 
-      {/* Form Container */}
+      {/* Form container */}
       <div
         style={{
           position: "relative",
@@ -792,267 +790,71 @@ export default function Login() {
           boxShadow: "0 0 20px rgba(255,255,255,0.2)",
         }}
       >
-        <h2
-          style={{
-            textTransform: "capitalize",
-            textAlign: "center",
-            marginBottom: 24,
-            fontWeight: "300",
-            fontSize: 28,
-          }}
-        >
-          {form}
-        </h2>
+        <h2 style={{ textTransform: "capitalize", textAlign: "center", marginBottom: 24, fontWeight: 300, fontSize: 28 }}>{form}</h2>
 
-        {/* 🔹 LOGIN FORM */}
+        {/* Login Form */}
         {form === "login" && (
-          <form
-            onSubmit={handleLogin}
-            style={{ display: "flex", flexDirection: "column", gap: 20 }}
-          >
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              value={loginData.email}
-              onChange={(e) =>
-                setLoginData({ ...loginData, email: e.target.value })
-              }
-              style={{
-                padding: "10px 12px",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#333",
-                color: "white",
-              }}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              value={loginData.password}
-              onChange={(e) =>
-                setLoginData({ ...loginData, password: e.target.value })
-              }
-              style={{
-                padding: "10px 12px",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#333",
-                color: "white",
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                padding: 12,
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#ec4899",
-                color: "white",
-                fontWeight: "bold",
-                cursor: "pointer",
-              }}
-            >
-              Login
-            </button>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontSize: 14,
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => switchForm("register")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#f472b6",
-                  cursor: "pointer",
-                }}
-              >
-                Create account
-              </button>
-              <button
-                type="button"
-                onClick={() => switchForm("forget")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#f472b6",
-                  cursor: "pointer",
-                }}
-              >
-                Forgot password?
-              </button>
+          <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleLogin}>
+            <input type="email" placeholder="Email" required value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
+            <input type="password" placeholder="Password" required value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
+            <button type="submit" style={{ padding: 12, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold", cursor: "pointer" }}>Login</button>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
+              <button type="button" onClick={() => switchForm("register")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Create account</button>
+              <button type="button" onClick={() => switchForm("forget")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Forgot password?</button>
             </div>
           </form>
         )}
 
-        {/* 🔹 REGISTER FORM */}
+        {/* Register Form */}
         {form === "register" && (
-          <form
-            onSubmit={handleRegister}
-            style={{ display: "flex", flexDirection: "column", gap: 16 }}
-          >
-            <input
-              type="text"
-              placeholder="Name"
-              required
-              value={registerData.name}
-              onChange={(e) =>
-                setRegisterData({ ...registerData, name: e.target.value })
-              }
-              style={{
-                padding: "10px 12px",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#333",
-                color: "white",
-              }}
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              required
-              value={registerData.email}
-              onChange={(e) =>
-                setRegisterData({ ...registerData, email: e.target.value })
-              }
-              style={{
-                padding: "10px 12px",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#333",
-                color: "white",
-              }}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              required
-              value={registerData.password}
-              onChange={(e) =>
-                setRegisterData({ ...registerData, password: e.target.value })
-              }
-              style={{
-                padding: "10px 12px",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#333",
-                color: "white",
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                padding: 12,
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#ec4899",
-                color: "white",
-                fontWeight: "bold",
-              }}
-            >
-              Register
-            </button>
-            <p style={{ fontSize: 14, textAlign: "center" }}>
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={() => switchForm("login")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#f472b6",
-                  cursor: "pointer",
-                }}
-              >
-                Login
-              </button>
-            </p>
+          <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleRegister}>
+            <input type="text" placeholder="Name" required value={registerData.name} onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
+            <input type="email" placeholder="Email" required value={registerData.email} onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
+            <input type="password" placeholder="Password" required value={registerData.password} onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
+            <button type="submit" style={{ padding: 12, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold" }}>Register</button>
+            <p style={{ fontSize: 14, textAlign: "center" }}>Already have an account? <button type="button" onClick={() => switchForm("login")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Login</button></p>
           </form>
         )}
 
-        {/* 🔹 FORGOT PASSWORD */}
+        {/* Forget Form */}
         {form === "forget" && (
-          <form
-            onSubmit={handleForget}
-            style={{ display: "flex", flexDirection: "column", gap: 16 }}
-          >
-            <input
-              type="email"
-              placeholder="Enter your email"
-              required
-              value={forgetEmail}
-              onChange={(e) => setForgetEmail(e.target.value)}
-              style={{
-                padding: "10px 12px",
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#333",
-                color: "white",
-              }}
-            />
-            <button
-              type="submit"
-              style={{
-                padding: 12,
-                borderRadius: 6,
-                border: "none",
-                backgroundColor: "#ec4899",
-                color: "white",
-                fontWeight: "bold",
-              }}
-            >
-              Send Reset Link
-            </button>
-            <p style={{ fontSize: 14, textAlign: "center" }}>
-              Remembered your password?{" "}
-              <button
-                type="button"
-                onClick={() => switchForm("login")}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "#f472b6",
-                  cursor: "pointer",
-                }}
-              >
-                Login
-              </button>
-            </p>
+          <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleForget}>
+            <input type="email" placeholder="Enter your email" required value={forgetEmail} onChange={(e) => setForgetEmail(e.target.value)} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
+            <button type="submit" style={{ padding: 12, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold" }}>Send Reset Link</button>
+            <p style={{ fontSize: 14, textAlign: "center" }}>Remembered your password? <button type="button" onClick={() => switchForm("login")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Login</button></p>
           </form>
-        )}
-
-        {message && (
-          <p
-            style={{
-              marginTop: 16,
-              color: "#34d399",
-              fontWeight: "600",
-              textAlign: "center",
-            }}
-          >
-            {message}
-          </p>
-        )}
-        {error && (
-          <p
-            style={{
-              marginTop: 16,
-              color: "#f87171",
-              fontWeight: "600",
-              textAlign: "center",
-            }}
-          >
-            {error}
-          </p>
         )}
       </div>
+
+      {/* Popup modal */}
+      {popup.show && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 50,
+        }}>
+          <div style={{
+            backgroundColor: "#222",
+            padding: 24,
+            borderRadius: 12,
+            maxWidth: 350,
+            textAlign: "center",
+            color: "white",
+            boxShadow: "0 0 15px rgba(255,255,255,0.2)",
+          }}>
+            <h3 style={{ marginBottom: 12 }}>{popup.title}</h3>
+            <p style={{ marginBottom: 20 }}>{popup.message}</p>
+            <button onClick={closePopup} style={{ padding: 10, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold", cursor: "pointer" }}>OK</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

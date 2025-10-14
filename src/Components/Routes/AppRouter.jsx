@@ -86,15 +86,17 @@ import ConfirmBooking from "../Pages/Booking/ConfirmBooking";
 import PaymentMode from "../Pages/Booking/PaymentMode";
 import AllPlaces from "../Pages/Home/AllPlaces";
 import TravelInspiration from "../Pages/Home/TravelInspiration";
-import AdminRouter from "../Admin/AdminRouter/AdminRouter";
+// ✅ IMPORT THE AUTHENTICATION COMPONENT
+import AdminAuthComponent from "../Admin/AdminRouter/AdminAuthComponent"; 
 import RecentlyAdded from "../Pages/Home/RecentlyAdded";
 import NotFound from "../Pages/NotFound/NotFound";
+
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
+        {/* Public Routes with Layout */}
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -109,7 +111,7 @@ const AppRouter = () => {
           <Route path="/confirmbooking" element={<ConfirmBooking />} />
         </Route>
 
-        {/* Standalone routes */}
+        {/* Standalone routes (no common Layout) */}
         <Route path="/bookingform" element={<BookingForm />} />
         <Route path="/recentlyadded" element={<RecentlyAdded />} />
         <Route path="/paymentmode" element={<PaymentMode />} />
@@ -117,8 +119,9 @@ const AppRouter = () => {
         <Route path="/allplaces" element={<AllPlaces />} />
         <Route path="/travelinspiration" element={<TravelInspiration />} />
 
-        {/* ✅ Admin Routes */}
-        <Route path="/admin/*" element={<AdminRouter />} />
+        {/* ✅ Admin Routes: Protected by the AdminAuthComponent */}
+        {/* Any path starting with /admin (e.g., /admin, /admin/dashboard) will hit this component first. */}
+        <Route path="/admin/*" element={<AdminAuthComponent />} /> 
 
         {/* Not Found */}
         <Route path="*" element={<NotFound />} />

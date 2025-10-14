@@ -633,228 +633,206 @@
 // // }
 
 
-
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+// Import the AdminRouter component which defines the admin dashboard routes
+import AdminRouter from "./AdminRouter"; // Make sure the path is correct
 
-export default function Login() {
-  const navigate = useNavigate();
+// *** HARDCODED ADMIN CREDENTIALS (for client-side demonstration only!) ***
+const ADMIN_EMAIL = "admin@example.com";
+const ADMIN_PASSWORD = "secureAdminPassword123";
 
-  // Particles.js effect
-  useEffect(() => {
-    const scriptId = "particles-js-script";
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement("script");
-      script.id = scriptId;
-      script.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js";
-      script.async = true;
-      script.onload = () => {
-        if (window.particlesJS) {
-          window.particlesJS("particles-js", {
-            particles: {
-              number: { value: 80, density: { enable: true, value_area: 800 } },
-              color: { value: "#ffffff" },
-              shape: { type: "circle" },
-              opacity: { value: 0.5 },
-              size: { value: 5, random: true },
-              line_linked: {
-                enable: true,
-                distance: 150,
-                color: "#ffffff",
-                opacity: 0.4,
-                width: 1,
-              },
-              move: { enable: true, speed: 6 },
-            },
-            interactivity: {
-              events: {
-                onhover: { enable: true, mode: "repulse" },
-                onclick: { enable: true, mode: "push" },
-              },
-              modes: { repulse: { distance: 200 }, push: { particles_nb: 4 } },
-            },
-            retina_detect: true,
-          });
-        }
-      };
-      document.body.appendChild(script);
-    }
-  }, []);
+// --- Custom Modal Component ---
+const AuthModal = ({ isOpen, title, children, onClose, styleProps }) => {
+    if (!isOpen) return null;
 
-  const [form, setForm] = useState("login");
-  const [users, setUsers] = useState([]);
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [registerData, setRegisterData] = useState({ name: "", email: "", password: "" });
-  const [forgetEmail, setForgetEmail] = useState("");
-
-  // Popup state
-  const [popup, setPopup] = useState({ show: false, title: "", message: "", type: "info" });
-
-  const switchForm = (formName) => setForm(formName);
-
-  // Function to show popup
-  const showPopup = (title, message, type = "info") => {
-    setPopup({ show: true, title, message, type });
-  };
-
-  // Close popup
-  const closePopup = () => setPopup({ ...popup, show: false });
-
-  // Registration
-  const handleRegister = (e) => {
-    e.preventDefault();
-    const email = registerData.email.toLowerCase().trim();
-    if (users.find((u) => u.email === email)) {
-      showPopup("Error", "Email already registered", "error");
-      return;
-    }
-    setUsers([...users, { ...registerData, email }]);
-    showPopup("Success", "Account created successfully! You can login now", "success");
-    setRegisterData({ name: "", email: "", password: "" });
-    setForm("login");
-  };
-
-  // Login
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const email = loginData.email.toLowerCase().trim();
-    const password = loginData.password.trim();
-
-    const adminEmail = "sahibhussain@gmail.com";
-    const adminPassword = "123123";
-
-    if (email === adminEmail) {
-      if (password === adminPassword) {
-        showPopup("Welcome Admin", "You are logged in as admin", "success");
-        setTimeout(() => navigate("/admin"), 1500);
-      } else {
-        showPopup("Error", "Incorrect password", "error");
-      }
-      return;
-    }
-
-    const user = users.find((u) => u.email === email);
-    if (!user) {
-      showPopup("Error", "Email mismatch", "error");
-      return;
-    }
-
-    if (user.password === password) {
-      showPopup("Success", `Welcome back, ${user.name}!`, "success");
-      setTimeout(() => navigate("/"), 1500);
-    } else {
-      showPopup("Error", "Incorrect password", "error");
-    }
-  };
-
-  // Forgot password
-  const handleForget = (e) => {
-    e.preventDefault();
-    const email = forgetEmail.toLowerCase().trim();
-    const user = users.find((u) => u.email === email);
-    if (user) {
-      showPopup("Success", `Reset link sent to ${email} (simulated)`, "success");
-    } else {
-      showPopup("Error", "Email not found", "error");
-    }
-  };
-
-  return (
-    <div
-      style={{
-        position: "relative",
-        height: "100vh",
-        width: "100vw",
-        backgroundColor: "black",
-        overflow: "hidden",
-        color: "white",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      {/* Particles background */}
-      <div id="particles-js" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10 }} />
-
-      {/* Form container */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 20,
-          maxWidth: 400,
-          margin: "auto",
-          top: "50%",
-          transform: "translateY(-50%)",
-          backgroundColor: "rgba(30,30,30,0.8)",
-          borderRadius: 12,
-          padding: 32,
-          boxShadow: "0 0 20px rgba(255,255,255,0.2)",
-        }}
-      >
-        <h2 style={{ textTransform: "capitalize", textAlign: "center", marginBottom: 24, fontWeight: 300, fontSize: 28 }}>{form}</h2>
-
-        {/* Login Form */}
-        {form === "login" && (
-          <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleLogin}>
-            <input type="email" placeholder="Email" required value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
-            <input type="password" placeholder="Password" required value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
-            <button type="submit" style={{ padding: 12, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold", cursor: "pointer" }}>Login</button>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 14 }}>
-              <button type="button" onClick={() => switchForm("register")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Create account</button>
-              <button type="button" onClick={() => switchForm("forget")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Forgot password?</button>
+    return (
+        <div
+            style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: "rgba(0, 0, 0, 0.7)",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 1000,
+                fontFamily: "Arial, sans-serif",
+            }}
+        >
+            <div style={styleProps.modalBox}>
+                <h2 style={styleProps.modalTitle}>{title}</h2>
+                {children}
+                <button onClick={onClose} style={styleProps.closeButton}>
+                    &times;
+                </button>
             </div>
-          </form>
-        )}
-
-        {/* Register Form */}
-        {form === "register" && (
-          <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleRegister}>
-            <input type="text" placeholder="Name" required value={registerData.name} onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
-            <input type="email" placeholder="Email" required value={registerData.email} onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
-            <input type="password" placeholder="Password" required value={registerData.password} onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
-            <button type="submit" style={{ padding: 12, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold" }}>Register</button>
-            <p style={{ fontSize: 14, textAlign: "center" }}>Already have an account? <button type="button" onClick={() => switchForm("login")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Login</button></p>
-          </form>
-        )}
-
-        {/* Forget Form */}
-        {form === "forget" && (
-          <form style={{ display: "flex", flexDirection: "column", gap: 16 }} onSubmit={handleForget}>
-            <input type="email" placeholder="Enter your email" required value={forgetEmail} onChange={(e) => setForgetEmail(e.target.value)} style={{ padding: "10px", borderRadius: 6, border: "none", backgroundColor: "#333", color: "white" }} />
-            <button type="submit" style={{ padding: 12, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold" }}>Send Reset Link</button>
-            <p style={{ fontSize: 14, textAlign: "center" }}>Remembered your password? <button type="button" onClick={() => switchForm("login")} style={{ background: "none", border: "none", color: "#f472b6", cursor: "pointer" }}>Login</button></p>
-          </form>
-        )}
-      </div>
-
-      {/* Popup modal */}
-      {popup.show && (
-        <div style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0,0,0,0.5)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          zIndex: 50,
-        }}>
-          <div style={{
-            backgroundColor: "#222",
-            padding: 24,
-            borderRadius: 12,
-            maxWidth: 350,
-            textAlign: "center",
-            color: "white",
-            boxShadow: "0 0 15px rgba(255,255,255,0.2)",
-          }}>
-            <h3 style={{ marginBottom: 12 }}>{popup.title}</h3>
-            <p style={{ marginBottom: 20 }}>{popup.message}</p>
-            <button onClick={closePopup} style={{ padding: 10, borderRadius: 6, border: "none", backgroundColor: "#ec4899", fontWeight: "bold", cursor: "pointer" }}>OK</button>
-          </div>
         </div>
-      )}
-    </div>
-  );
+    );
+};
+
+// --- Main Authentication Component ---
+// This is used as the <Route element> for the '/admin/*' path in AppRouter.jsx
+export default function AdminAuthComponent() {
+    const navigate = useNavigate();
+    
+    // Check URL for '?access=admin' to trigger auth requirement
+    const requiresAuth = window.location.search.includes("access=admin");
+
+    const [isAuthenticated, setIsAuthenticated] = useState(!requiresAuth);
+    const [loginData, setLoginData] = useState({ email: "", password: "" });
+    const [error, setError] = useState("");
+    // Only open the popup if auth is required and we aren't already authenticated
+    const [isPopupOpen, setIsPopupOpen] = useState(requiresAuth && !isAuthenticated);
+
+    // --- Particles.js Effect ---
+    useEffect(() => {
+        const scriptId = "particles-js-script";
+        if (!document.getElementById(scriptId)) {
+            const script = document.createElement("script");
+            script.id = scriptId;
+            script.src =
+                "https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js";
+            script.async = true;
+            script.onload = () => {
+                if (window.particlesJS) {
+                    window.particlesJS("particles-js", {
+                        particles: {
+                            number: { value: 80, density: { enable: true, value_area: 800 } },
+                            color: { value: "#ffffff" },
+                            shape: { type: "circle" },
+                            opacity: { value: 0.5 },
+                            size: { value: 5, random: true },
+                            line_linked: {
+                                enable: true,
+                                distance: 150,
+                                color: "#ffffff",
+                                opacity: 0.4,
+                            },
+                            move: { enable: true, speed: 6 },
+                        },
+                        interactivity: { events: { onhover: { enable: true, mode: "repulse" }, resize: true } },
+                        retina_detect: true,
+                    });
+                }
+            };
+            document.body.appendChild(script);
+        }
+    }, []);
+
+    // --- State & Handlers ---
+    const handleLoginChange = (e) => {
+        setLoginData({ ...loginData, [e.target.name]: e.target.value });
+        setError(""); // Clear error on input change
+    };
+
+    // --- Authentication Logic ---
+    const handleAdminLogin = (e) => {
+        e.preventDefault();
+        const email = loginData.email.toLowerCase().trim();
+        const password = loginData.password;
+        
+        let errorMessage = "";
+        const emailMatch = email === ADMIN_EMAIL;
+        const passwordMatch = password === ADMIN_PASSWORD;
+
+        if (emailMatch && passwordMatch) {
+            // Success
+            setIsAuthenticated(true);
+            setError("");
+            setIsPopupOpen(false);
+
+            // Remove the '?access=admin' parameter from URL upon success
+            const url = new URL(window.location.href);
+            url.searchParams.delete('access');
+            window.history.replaceState(null, '', url.toString());
+
+        } else {
+            // Failure: Determine specific error message
+            if (!emailMatch && !passwordMatch) {
+                errorMessage = "Email and password mismatch.";
+            } else if (!emailMatch) {
+                errorMessage = "Email is mismatch.";
+            } else if (!passwordMatch) {
+                errorMessage = "Password is mismatch.";
+            }
+            
+            setError(errorMessage);
+            setIsAuthenticated(false);
+        }
+    };
+    
+    const closePopup = () => {
+        setIsPopupOpen(false);
+        // Redirect to home if unauthorized user closes the popup
+        navigate('/'); 
+    };
+
+
+    // --- Styling & Sub-Components ---
+    const inputStyle = { padding: "10px 12px", borderRadius: 6, border: "none", outline: "none", fontSize: 16, backgroundColor: "#555", color: "white" };
+    const buttonStyle = { padding: 12, borderRadius: 6, border: "none", backgroundColor: "#ec4899", color: "white", fontWeight: "bold", cursor: "pointer", fontSize: 16, marginTop: "10px" };
+    const modalStyleProps = {
+        modalBox: { backgroundColor: "rgba(30, 30, 30, 0.9)", padding: "30px", borderRadius: "10px", maxWidth: "400px", width: "90%", color: "white", boxShadow: "0 5px 15px rgba(255, 255, 255, 0.2)", position: "relative" },
+        modalTitle: { textAlign: "center", marginBottom: "20px", color: "#f472b6", fontSize: "24px" },
+        closeButton: { position: "absolute", top: "10px", right: "10px", background: "none", border: "none", color: "white", fontSize: "20px", cursor: "pointer" },
+    };
+    
+    const LoginForm = () => (
+        <form onSubmit={handleAdminLogin} style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+            <input type="email" name="email" placeholder="Admin Email" required value={loginData.email} onChange={handleLoginChange} style={inputStyle} />
+            <input type="password" name="password" placeholder="Admin Password" required value={loginData.password} onChange={handleLoginChange} style={inputStyle} />
+            <button type="submit" style={buttonStyle}>Authenticate</button>
+            {error && (<p style={{ color: "#f87171", fontWeight: "600", textAlign: "center", margin: 0, marginTop: "10px" }}>🛑 {error}</p>)}
+        </form>
+    );
+
+
+    // --- Render Logic ---
+    return (
+        <div 
+            style={{
+                position: "relative",
+                height: "100vh",
+                width: "100vw",
+                backgroundColor: "black",
+                overflow: "hidden",
+                color: "white",
+                fontFamily: "Arial, sans-serif",
+            }}
+        >
+            {/* Particles Container */}
+            <div id="particles-js" style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 10 }} />
+
+            {/* Conditional Content */}
+            {isAuthenticated ? (
+                // ✅ RENDER THE ADMIN ROUTER UPON SUCCESSFUL AUTHENTICATION
+                <AdminRouter />
+            ) : (
+                <>
+                    <h1 style={{ position: "relative", zIndex: 20, textAlign: "center", paddingTop: "50px" }}>
+                        {requiresAuth ? "Admin Access Required" : "Access Denied"}
+                    </h1>
+                    
+                    <AuthModal 
+                        isOpen={isPopupOpen} 
+                        title="Admin Authentication" 
+                        onClose={closePopup}
+                        styleProps={modalStyleProps}
+                    >
+                        <LoginForm />
+                    </AuthModal>
+
+                    {/* Fallback message if popup is closed while unauthorized */}
+                    {!isPopupOpen && requiresAuth && (
+                        <p style={{ position: "relative", zIndex: 20, textAlign: "center", color: "#f87171", marginTop: "20px" }}>
+                            Unauthorized access attempt. Redirecting to home...
+                        </p>
+                    )}
+                </>
+            )}
+        </div>
+    );
 }

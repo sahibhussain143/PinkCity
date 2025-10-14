@@ -10,11 +10,10 @@ const FloatingButtons = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
-      {/* WhatsApp Button */}
+    <div className="fixed bottom-6 right-6 z-[9999]">
       <button
         onClick={openWhatsApp}
-        className="bg-green-500 hover:bg-green-700 hover:scale-125 duration-700 hover:rotate-[360deg]  text-white p-4 rounded-full shadow-xl transition"
+        className="bg-green-500 hover:bg-green-700 hover:scale-125 duration-700 hover:rotate-[360deg] text-white p-4 rounded-full shadow-xl transition"
         title="Chat on WhatsApp"
         aria-label="Chat on WhatsApp"
       >

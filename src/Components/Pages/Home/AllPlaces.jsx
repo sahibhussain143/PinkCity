@@ -502,7 +502,7 @@ const AllPlaces = () => {
 
             {isPopupOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-10 p-4">
-                    <div className="relative max-w-4xl bg-white/10 w-full backdrop-blur-2xl rounded-lg shadow-2xl overflow-hidden max-h-[90vh] flex flex-col lg:flex-row">
+                    <div className="relative max-w-4xl bg-white/10 w-full backdrop-blur-2xl rounded-lg shadow-2xl overflow-hidden max-h-[80vh] mt-16 flex flex-col lg:flex-row">
                         <button
                             onClick={handleClosePopup}
                             className="absolute top-2 right-2 text-white bg-gray-800 rounded-full p-2 hover:bg-red-700 z-10"
@@ -514,7 +514,7 @@ const AllPlaces = () => {
                             <img src={selectedImage} alt="Full view" className="max-h-full full object-cover rounded-lg shadow-md" />
                         </div>
 
-                        <div className="lg:w-1/4 p-4 max-h-auto bg-white/40 backdrop-blur-2xl  flex-shrink-0 lg:flex-grow-0 overflow-y-auto">
+                        <div className="lg:w-1/4 p-4 max-h-auto mt-12 bg-white/40 backdrop-blur-2xl  flex-shrink-0 lg:flex-grow-0 overflow-y-auto">
                             <h4 className="text-lg font-semibold mb-3 text-gray-800 border-b pb-2">View More Images!</h4>
                             <div className="grid grid-cols-2 sm:grid-cols-3 xs:grid-cols-3 md:grid-cols-4 xl-grid-cols-2  lg:grid-cols-1 gap-1">
                                 {relatedImages.map((image, index) => (

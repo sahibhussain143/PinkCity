@@ -36,14 +36,18 @@ export default {
           '50%': { transform: 'translate(50vw, 50vh)' },
           '100%': { transform: 'translate(0, 0)' },
         },
+        fullfloat: {                        // ✅ Added correctly here
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
       },
-      
       animation: {
         spinSlow: 'spin 5s linear infinite',
         'spin-color': 'spin-color 4s linear infinite',
         floatX: 'floatX 20s linear infinite',
         floatY: 'floatY 25s linear infinite',
         floatXY: 'floatXY 30s ease-in-out infinite',
+        fullfloat: 'fullfloat 3s ease-in-out infinite', // ✅ Add animation mapping
       },
     },
   },

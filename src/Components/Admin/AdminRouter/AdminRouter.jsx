@@ -46,50 +46,56 @@
 
 
 
-import { Routes, Route, Navigate } from 'react-router-dom';
-import AdminLayOut from '../AdminLayOut/AdminLayOut';
-import DashBoard from '../AdminPages/DashBoard/DashBoard';
-import MediaManager from '../AdminPages/MediaManager/MediaManager';
-import Schdules from '../AdminPages/Schedules/Schdules';
-import Customers from '../AdminPages/Customers/Customers';
-import Statistics from '../AdminPages/Statistics/Statistics';
-import Bookings from '../AdminPages/Bookings/Booking';
-import Benner from '../AdminPages/Bennar/Bennar';
-import AddBennar from '../AdminPages/Bennar/AddBennar';
-import BennarList from '../AdminPages/Bennar/BennarList';
-import { Settings } from 'lucide-react'; // NOTE: Assuming Settings is a component/icon from lucide-react
-import RegisteredCustomer from "../../Admin/AdminPages/Customers/RegisteredCustomer";
-import EnquiryList from '../AdminPages/Customers/EnquiryList';
-import AddCustomer from '../AdminPages/Customers/AddCustomer';
-import ManageRecentlyAdded from '../AdminPages/Bennar/ManageRecentlyAdded';
+
+
+
+import React from "react";   
+import { Routes, Route, Navigate } from "react-router-dom";
+import AdminLayOut from "../AdminLayOut/AdminLayOut";
+import DashBoard from "../AdminPages/DashBoard/DashBoard";
+import MediaManager from "../AdminPages/MediaManager/MediaManager";
+import Schdules from "../AdminPages/Schedules/Schdules";
+import Customers from "../AdminPages/Customers/Customers";
+import Statistics from "../AdminPages/Statistics/Statistics";
+import Bookings from "../AdminPages/Bookings/Booking";
+import Benner from "../AdminPages/Bennar/Bennar";
+import AddBennar from "../AdminPages/Bennar/AddBennar";
+import BennarList from "../AdminPages/Bennar/BennarList";
+import { Settings } from "lucide-react";
+import RegisteredCustomer from "../AdminPages/Customers/RegisteredCustomer";
+import EnquiryList from "../AdminPages/Customers/EnquiryList";
+import AddCustomer from "../AdminPages/Customers/AddCustomer";
+import ManageRecentlyAdded from "../AdminPages/Bennar/ManageRecentlyAdded";
+import AdminProtectedRoute from "../AdminRouter/AdminProtectedRoute.jsx";
 
 const AdminRouter = () => {
   return (
-    <div style={{ position: 'relative', zIndex: 20 }}> {/* Added zIndex to render above particles */}
-      <Routes>
-        {/* All admin routes are children of AdminLayOut */}
-        <Route element={<AdminLayOut />}>
-          <Route path="dashboard" element={<DashBoard />} />
-          <Route path="mediamanager" element={<MediaManager />} />
-          <Route path="schedules" element={<Schdules />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="settings" element={<Settings />} />
-
-          <Route path="statistics" element={<Statistics />} />
-          <Route path="bookings" element={<Bookings />} />
-          <Route path="benner" element={<Benner />} />
-          <Route path="addbennar" element={<AddBennar />} />
-          <Route path="bennarlist" element={<BennarList />} />
-          <Route path="ManageRecentlyAdded" element={<ManageRecentlyAdded />} />
-          <Route path="RegisteredCustomer" element={<RegisteredCustomer />} />
-          <Route path="enquirylist" element={<EnquiryList />} />
-          <Route path="AddCustomer" element={<AddCustomer />} />
-
-          {/* Default Route: Redirect /admin to /admin/dashboard */}
-          <Route path="" element={<Navigate to="dashboard" />} />
-        </Route>
-      </Routes>
-    </div>
+    <Routes>
+      {/* ✅ Entire Admin Layout is Protected */}
+      <Route
+        element={
+          <AdminProtectedRoute>
+            <AdminLayOut />
+          </AdminProtectedRoute>
+        }
+      >
+        <Route path="dashboard" element={<DashBoard />} />
+        <Route path="mediamanager" element={<MediaManager />} />
+        <Route path="schedules" element={<Schdules />} />
+        <Route path="customers" element={<Customers />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="statistics" element={<Statistics />} />
+        <Route path="bookings" element={<Bookings />} />
+        <Route path="benner" element={<Benner />} />
+        <Route path="addbennar" element={<AddBennar />} />
+        <Route path="bennarlist" element={<BennarList />} />
+        <Route path="ManageRecentlyAdded" element={<ManageRecentlyAdded />} />
+        <Route path="RegisteredCustomer" element={<RegisteredCustomer />} />
+        <Route path="enquirylist" element={<EnquiryList />} />
+        <Route path="AddCustomer" element={<AddCustomer />} />
+        <Route path="" element={<Navigate to="dashboard" />} />
+      </Route>
+    </Routes>
   );
 };
 

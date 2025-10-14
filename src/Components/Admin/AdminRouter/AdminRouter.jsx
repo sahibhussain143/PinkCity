@@ -46,10 +46,6 @@
 
 
 
-
-
-
-import React from "react";   
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayOut from "../AdminLayOut/AdminLayOut";
 import DashBoard from "../AdminPages/DashBoard/DashBoard";
@@ -67,11 +63,11 @@ import EnquiryList from "../AdminPages/Customers/EnquiryList";
 import AddCustomer from "../AdminPages/Customers/AddCustomer";
 import ManageRecentlyAdded from "../AdminPages/Bennar/ManageRecentlyAdded";
 import AdminProtectedRoute from "../AdminRouter/AdminProtectedRoute.jsx";
+import LogOut from "../AdminPages/logout/LogOut";
 
 const AdminRouter = () => {
   return (
     <Routes>
-      {/* ✅ Entire Admin Layout is Protected */}
       <Route
         element={
           <AdminProtectedRoute>
@@ -93,6 +89,7 @@ const AdminRouter = () => {
         <Route path="RegisteredCustomer" element={<RegisteredCustomer />} />
         <Route path="enquirylist" element={<EnquiryList />} />
         <Route path="AddCustomer" element={<AddCustomer />} />
+        <Route path="logout" element={<LogOut />} /> {/* ✅ Logout Route */}
         <Route path="" element={<Navigate to="dashboard" />} />
       </Route>
     </Routes>

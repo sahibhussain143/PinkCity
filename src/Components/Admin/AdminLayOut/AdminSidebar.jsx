@@ -100,7 +100,7 @@ const AdminSidebar = ({ adminProfile }) => {
             <FaChartLine className="h-5 w-5" />
             {isSidebarOpen && <span className="ml-3">Statistics</span>}
           </Link>
-          <Link to="/logout" className={`flex items-center p-3 rounded-lg hover:bg-blue-100 hover:text-pink-600 ${!isSidebarOpen && 'justify-center'}`}>
+          <Link to="/admin/logout" className={`flex items-center p-3 rounded-lg hover:bg-blue-100 hover:text-pink-600 ${!isSidebarOpen && 'justify-center'}`}>
             <FaArrowRightFromBracket className="h-5 w-5" />
             {isSidebarOpen && <span className="ml-3">LogOut</span>}
           </Link>
